@@ -1,0 +1,34 @@
+{
+  "name": "clank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "clank.js",
+  "dependencies": {
+    "@types/node": "^14.14.10",
+    "discord.js": "^12.5.1",
+    "nodemon": "^2.0.6",
+    "redis": "^3.0.2",
+    "typescript": "^4.1.2"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc src/*.ts",
+    "main": "node src/clank.ts",
+    "dockerBuild": "docker build --rm -t steadyeddie/clank .",
+    "dockerRun": "docker run -d steadyeddie/clank"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EddieEldridge/clank.git"
+  },
+  "author": "Eddie Eldridge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EddieEldridge/clank/issues"
+  },
+  "homepage": "https://github.com/EddieEldridge/clank#readme"
+}
