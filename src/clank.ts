@@ -1,4 +1,5 @@
 // Imports
+import { RedisClientInterface } from './redisClient';
 let Discord = require("discord.js");
 let config = require("../config.json");
 let client = new Discord.Client();
@@ -40,6 +41,11 @@ client.on("message", function (message) {
     }
     case "shutdown": {
       message.reply("Farewell, I shall return!");
+      break;
+    }
+    case "showgame": {
+      RedisClientInterface.init();
+      message.reply(RedisClientInterface.showGame());
       break;
     }
     default: {
