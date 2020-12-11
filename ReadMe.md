@@ -3,7 +3,7 @@
 **ToDo**
 * Word of the day
 * Dice roller
-* CRUD for Redis game list
+* <s>CRUD for Redis game list</s>
 * Word definition
 * Wiki search
 * Giphy search
