@@ -7,7 +7,7 @@
     "@types/node": "^14.14.10",
     "@types/redis": "^2.8.28",
     "discord.js": "^12.5.1",
-    "redis": "^3.0.2"
+    "tedis": "^0.1.12"
   },
   "optionalDependencies": {
     "fsevents": "^2.1.3"
