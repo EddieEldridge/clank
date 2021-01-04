@@ -7,7 +7,9 @@ import RedisClient from "./redis/redisClient";
 import DictionaryClient from "./dictionary/dictionaryAPI";
 import { convertArrayToString } from "./utils/utils";
 import { pickRandomElement } from "./utils/utils";
+import { showHelp } from "./utils/utils";
 import { rollDice } from "./dice/diceRoller";
+import { exit } from "process";
 
 // Constructors
 let discordclient = new Discord.Client();
@@ -16,19 +18,12 @@ let redisClient = new RedisClient();
 let dictClient = new DictionaryClient();
 
 // Variables
-const currentGames: string[] = [
-  "Apex",
-  "Crusader Kings",
-  "Warzone",
-  "Tabletop Simulator",
-  "Tekken",
-  "Talisman"
-];
 const prefix = "!";
 
 // Login
 discordclient.login(config.BOT_TOKEN);
 
+console.log();
 console.log("Powering on...");
 console.log("Clank is online!");
 console.log("=== DEBUG === \n \n \n");
@@ -46,14 +41,6 @@ discordclient.on("message", message => {
   const argsContent = convertArrayToString(args, ",", true);
 
   switch (command) {
-    case "game": {
-      message.reply("Hmmmm... you should play... **" + chooseRandomGame() + "!**");
-      break;
-    }
-    case "shutdown": {
-      message.reply("Farewell, I shall return!");
-      break;
-    }
     case "addgame": {
       if (!args.length) {
         return message.channel.send(`You didn't specify a game, ${message.author}!`);
@@ -102,6 +89,14 @@ discordclient.on("message", message => {
       }
       break;
     }
+    case "help":{
+      message.channel.send(showHelp());
+    }
+    case "shutdown":{
+      message.reply("Farewell, I shall return!");
+      process.exit(0);
+      break;
+    }
     default: {
       message.reply("I'm sorry but I have no idea what you are talking about!");
       break;
@@ -109,17 +104,5 @@ discordclient.on("message", message => {
   }
 });
 
-// Functions
-function chooseRandomGame(): string {
-  let numCurrentGame: number = currentGames.length;
-  let randomNumber: number = Math.random() * (numCurrentGame - 0) + 0;
-  let game: string = currentGames[Math.round(randomNumber)];
-  return game;
-}
-
 console.log();
-console.log();
-console.log();
-
-
 

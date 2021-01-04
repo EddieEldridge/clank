@@ -6,6 +6,7 @@ export function convertArrayToString(array: Array<string>, seperator: string, se
         }
         return string;
     } catch (error) {
+      console.log(error);
     }
 
 }
@@ -24,6 +25,15 @@ export function pickRandomElement(array: Array<string>): string {
 
         return decision;
     } catch (error) {
+      console.log(error);
     }
 
+}
+
+export function showHelp(): string{
+    try {
+        return "TO-DO-ADD-COMMANDS";
+    } catch (error) {
+      console.log(error);
+    }
 }
