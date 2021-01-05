@@ -15,15 +15,22 @@
     "fsevents": "^2.1.3"
   },
   "devDependencies": {
+    "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-unicorn": "^25.0.1",
     "ts-node-dev": "^1.0.0",
     "typescript": "^4.1.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc src/*.ts",
+    "compile": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/*.ts",
     "dockerBuild": "docker build --rm -t steadyeddie/clank .",
-    "dockerRun": "docker run -d steadyeddie/clank"
+    "dockerRun": "docker run -d steadyeddie/clank",
+    "lint": "eslint ./src/*"
   },
   "repository": {
     "type": "git",

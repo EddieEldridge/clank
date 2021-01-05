@@ -1,39 +1,36 @@
-export function convertArrayToString(array: Array<string>, seperator: string, seperate: boolean): string {
+export function convertArrayToString(
+    array: Array<string>,
+    seperator: string,
+    seperate: boolean
+): string {
     try {
         let string: string = array.toString();
         if (seperate) {
-            string = string.replace(",", " ");
+            string = string.replace(',', ' ');
         }
         return string;
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-
 }
 
 export function pickRandomElement(array: Array<string>): string {
-
     try {
-        let decision: string;
-
         // Add Decides
-        array.push("Luke decides");
-        array.push("Eddie decides");
-        array.push("Michael decides");
+        array.push('Luke decides');
+        array.push('Eddie decides');
+        array.push('Michael decides');
 
-        decision = array[Math.floor(Math.random() * array.length)];
-
-        return decision;
+        return array[Math.floor(Math.random() * array.length)];
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-
 }
 
-export function showHelp(): string{
+export function showHelp(): string {
     try {
-        return "TO-DO-ADD-COMMANDS";
+        return 'TO-DO-ADD-COMMANDS';
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
 }

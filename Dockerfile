@@ -14,6 +14,9 @@ RUN npm install -f
 # Bundle app source
 COPY . .
 
+# Install required dependencies
+RUN npm run lint
+
 # Compile TypeScript code into Javascript
 RUN npm run compile
 

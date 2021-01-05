@@ -1,14 +1,19 @@
 {
     "compilerOptions": {
-        "target": "es6",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
-        "module": "CommonJS",
-        "noImplicitAny": false,
-        "removeComments": true,
+        "target": "es2020", 
+        "module": "commonjs",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "removeComments": false,
         "preserveConstEnums": true,
-        // "outFile": "../../built/local/tsc.js",
         "moduleResolution": "node",
-        "sourceMap": true
+        "outDir": "out"
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "**/*.spec.ts"]
+    "include": [
+        "src/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
 }
