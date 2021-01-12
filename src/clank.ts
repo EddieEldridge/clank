@@ -3,31 +3,33 @@ import * as Discord from 'discord.js';
 import authConfig from '../auth.json';
 
 // Classes
-import RedisClient from './redis/redisClient';
-// import DictionaryClient from './dictionary/dictionaryAPI';
-import { convertArrayToString } from './utils/utils';
-import { pickRandomElement } from './utils/utils';
-import { showHelp } from './utils/utils';
-import { rollDice } from './dice/diceRoller';
+import RedisClient from './redis/RedisClient';
+import DictionaryClient from './api/dictionaryAPI';
+import TheOneAPI from './api/TheOneAPI'
+import { convertArrayToString } from './utils/Utils';
+import { pickRandomElement } from './utils/Utils';
+import { showHelp } from './utils/Utils';
+import { rollDice } from './dice/DiceRoller';
 
 // Constructors
 const discordclient = new Discord.Client();
 const redisClient = new RedisClient();
-// const dictClient = new DictionaryClient();
+const lotrClient = new TheOneAPI();
+const dictClient = new DictionaryClient();
 
 // Variables
 const prefix = '!';
 
 // Login
-discordclient.login(authConfig.BOT_TOKEN);
+discordclient.login(authConfig.DISCORD_BOT_TOKEN);
 
 console.log();
 console.log('Powering on...');
 console.log('Clank is online!');
-console.log('=== DEBUG === \n \n \n');
+console.log('=== DEBUG === \n');
 
 // Main Command Definitions
-discordclient.on('message', (message) => {
+discordclient.on('message', async (message) => {
     // Exit if the message isn't addressed to the bot
     if (message.author.bot || !message.content.startsWith(prefix)) return;
 
@@ -36,7 +38,12 @@ discordclient.on('message', (message) => {
     const command = args.shift().toLowerCase();
     const argsContent = convertArrayToString(args, ',', true);
 
+    console.log("\nMessage Recieved: " + message.content);
+    
+
     switch (command) {
+
+        // Redis
         case 'addgame': {
             if (!args.length) {
                 return message.channel.send(
@@ -85,10 +92,15 @@ discordclient.on('message', (message) => {
             });
             break;
         }
+
+       // Dictionary 
         case 'wotd': {
-            // message.channel.send(dictClient.getWordOfTheDay());
+            const wotdEmbed = await dictClient.getWordOfTheDay();
+            message.channel.send(wotdEmbed);
             break;
         }
+
+        // Dice Roller
         case 'roll': {
             const diceRoll: string = rollDice(argsContent);
             if (diceRoll) {
@@ -100,6 +112,19 @@ discordclient.on('message', (message) => {
             }
             break;
         }
+
+        // LOTR
+        case 'lotrcs': {
+            message.channel.send(lotrClient.listCharacters());
+            break;
+        }
+        case 'lotrgc': {
+            const characterEmbed = await lotrClient.getCharacter(argsContent);
+            message.channel.send(characterEmbed);
+            break;
+        }
+
+        // Utils
         case 'help': {
             message.channel.send(showHelp());
             break;

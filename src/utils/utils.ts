@@ -1,3 +1,5 @@
+import { LOTRCharacter } from '../models/Interfaces'
+
 export function convertArrayToString(
     array: Array<string>,
     seperator: string,
@@ -33,4 +35,20 @@ export function showHelp(): string {
     } catch (error) {
         console.log(error);
     }
+}
+
+export function printResponse(response: any){
+    console.log("=== Response ====");
+    console.log(response.data);
+    console.log(response.status);
+    console.log(response.statusText);
+    console.log(response.headers);
+    console.log(response.config); 
+    return;
+}
+
+export function processCharacter(json: string): string{
+    let character: string;
+
+    return character;
 }
