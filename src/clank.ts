@@ -13,7 +13,7 @@ import { rollDice } from './dice/DiceRoller';
 
 // Constructors
 const discordclient = new Discord.Client();
-const redisClient = new RedisClient();
+// const redisClient = new RedisClient();
 const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 
@@ -99,6 +99,13 @@ discordclient.on('message', async (message) => {
             message.channel.send(wotdEmbed);
             break;
         }
+        case 'define': {
+            console.log("Args: " + args);
+            
+            const wordDefinition = await dictClient.getWordDefinition(argsContent);
+            message.channel.send(wordDefinition);
+            break;
+        }
 
         // Dice Roller
         case 'roll': {
@@ -119,13 +126,19 @@ discordclient.on('message', async (message) => {
             break;
         }
         case 'lotrgc': {
-            const characterEmbed = await lotrClient.getCharacter(argsContent);
+            const characterEmbed = await lotrClient.getCharacterMessage(argsContent);
             message.channel.send(characterEmbed);
             break;
         }
+        case 'lotrquote': {
+            const randomQuote = await lotrClient.getRandomQuote(argsContent);
+            message.channel.send(randomQuote);
+            break;
+        }
+
 
         // Utils
-        case 'help': {
+        case 'clankhelp': {
             message.channel.send(showHelp());
             break;
         }

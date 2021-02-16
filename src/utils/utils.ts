@@ -31,19 +31,36 @@ export function pickRandomElement(array: Array<string>): string {
 
 export function showHelp(): string {
     try {
-        return 'TO-DO-ADD-COMMANDS';
+        const message: string =
+        "**== Dictionary ==**" + "\n" +
+        "*Command:* !wotd" + "\n" +
+        "*Result:* Get the Word of the Day and it's definition" + "\n" +
+        "*Command:* !define <word>" + "\n" +
+        "*Result:* Define a word" + "\n" +  "\n" +
+        "**== Lord of the Rings ==**" + "\n" +
+        "*Command:* !lotrgc <characterName>" + "\n" +
+        "*Result:* Get information about the given character" + "\n" +
+        "*Command:* !lotrquoute " + "\n" +
+        "*Result:* Get a random quote from Lord of the Rings" + "\n" + "\n" +
+        "**== Dice Roller ==**" + "\n" +
+        "*Command:* !roll <xdy>" + "\n" +
+        "*Result:* Roll dice. Same format as Roll20" + "\n";
+
+        return message;
+            
     } catch (error) {
         console.log(error);
+        return error;
     }
 }
 
 export function printResponse(response: any){
-    console.log("=== Response ====");
+    console.log("=== Response (data) ====");
     console.log(response.data);
-    console.log(response.status);
-    console.log(response.statusText);
-    console.log(response.headers);
-    console.log(response.config); 
+
+    console.log("Status: " + response.status + " - " +  response.statusText);
+    // console.log(response .headers);
+    // console.log(response.config); 
     return;
 }
 
