@@ -11,9 +11,14 @@ import { pickRandomElement } from './utils/Utils';
 import { showHelp } from './utils/Utils';
 import { rollDice } from './dice/DiceRoller';
 
+// Classes
+import LOTRQuote from './models/lotr/LOTRQuote';
+import LOTRCharacter from './models/lotr/LOTRCharacter';
+import DefinitionDictAPI from './models/dictionary/DictionaryAPI/DefinitionDictAPI';
+
 // Constructors
 const discordclient = new Discord.Client();
-// const redisClient = new RedisClient();
+const redisClient = new RedisClient();
 const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 
@@ -35,6 +40,7 @@ discordclient.on('message', async (message) => {
 
     // Split the message up by spaces to extract our arguments
     const args = message.content.slice(prefix.length).trim().split(/ +/);
+    console.log(args);
     const command = args.shift().toLowerCase();
     const argsContent = convertArrayToString(args, ',', true);
 
@@ -95,15 +101,47 @@ discordclient.on('message', async (message) => {
 
        // Dictionary 
         case 'wotd': {
-            const wotdEmbed = await dictClient.getWordOfTheDay();
-            message.channel.send(wotdEmbed);
+            const wordOfTheDayDefinition: DefinitionDictAPI = await dictClient.getWordOfTheDay();
+
+            try {
+                const embed = new Discord.MessageEmbed()
+                .setColor('#344feb')
+                .setAuthor(wordOfTheDayDefinition?.word)
+
+                for(let i=0; i<wordOfTheDayDefinition.meanings.length; i++){
+                    embed.addFields(
+                    { name: '============ Definition ('+(i+1)+') ============' , value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
+                    { name: 'Example:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
+                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A'},
+                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
+                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
+                    { name: 'Part of Speech:  ', value: wordOfTheDayDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
+                    )
+                }
+                message.channel.send(embed);  
+            } catch (error) {
+                console.log("Error - Word of the Day: " + error);
+            }
             break;
         }
+
         case 'define': {
-            console.log("Args: " + args);
-            
-            const wordDefinition = await dictClient.getWordDefinition(argsContent);
-            message.channel.send(wordDefinition);
+            const wordDefinition: DefinitionDictAPI = await dictClient.getWordDefinition(argsContent);
+            const embed = new Discord.MessageEmbed()
+                .setColor('#344feb')
+                .setAuthor(wordDefinition?.word)
+
+                for(let i=0; i<wordDefinition.meanings.length; i++){
+                    embed.addFields(
+                    { name: '============ Definition ('+(i+1)+') ============' , value: wordDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
+                    { name: 'Example:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
+                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A'},
+                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
+                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
+                    { name: 'Part of Speech:  ', value: wordDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
+                    )
+                }
+                message.channel.send(embed);                        
             break;
         }
 
@@ -121,24 +159,66 @@ discordclient.on('message', async (message) => {
         }
 
         // LOTR
-        case 'lotrcs': {
-            message.channel.send(lotrClient.listCharacters());
-            break;
-        }
         case 'lotrgc': {
-            const characterEmbed = await lotrClient.getCharacterMessage(argsContent);
-            message.channel.send(characterEmbed);
+            if(!argsContent){
+                message.reply("specify a character!");
+                break;
+            }
+            const randomLOTRCharacter: LOTRCharacter = await lotrClient.getCharacterMessage(argsContent);
+            const randomLOTRCharacterMessage: string =
+                "**Name: **" +
+                randomLOTRCharacter.name +
+                "\n" +
+                "**Race: **" +
+                randomLOTRCharacter.race +
+                "\n" +
+                "**Gender: **" +
+                randomLOTRCharacter.gender +
+                "\n" +
+                "**Birth: **" +
+                randomLOTRCharacter.birth +
+                "\n" +
+                "**Spouse: **" +
+                randomLOTRCharacter.spouse +
+                "\n" +
+                "**Death: **" +
+                randomLOTRCharacter.death +
+                "\n" +
+                "**Realm: **" +
+                randomLOTRCharacter.realm +
+                "\n" +
+                "**Hair: **" +
+                randomLOTRCharacter.hair +
+                "\n" +
+                "**Height: **" +
+                randomLOTRCharacter.height +
+                "\n" +
+                "**Wiki: **" +
+                randomLOTRCharacter.wikiUrl +
+                "\n";
+                
+            message.channel.send(randomLOTRCharacterMessage);
             break;
         }
-        case 'lotrquote': {
-            const randomQuote = await lotrClient.getRandomQuote(argsContent);
-            message.channel.send(randomQuote);
-            break;
-        }
+        case 'lotrq': {
+            const randomLOTRQuote: LOTRQuote = await lotrClient.getRandomQuote();
 
+            const randomLOTRQuoteMessage: string =
+            "**Quote: **" +
+            randomLOTRQuote.text +
+            "\n" +
+            "**Character: **" +
+            randomLOTRQuote.character +
+            "\n" +
+            "**Movie: **" +
+            randomLOTRQuote.movie;
+
+            message.channel.send(randomLOTRQuoteMessage);
+            break;
+        }
 
         // Utils
-        case 'clankhelp': {
+        case 'help': {
             message.channel.send(showHelp());
             break;
         }

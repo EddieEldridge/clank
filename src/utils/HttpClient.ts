@@ -12,7 +12,7 @@ export default class HTTPClient {
     }
 
     // GET
-    async GET(endpoint: string): Promise<string> {
+    async GET(endpoint: string): Promise<any> {
         console.log("GET: " + this.url + endpoint)
 
         try {
@@ -36,7 +36,7 @@ export default class HTTPClient {
     }
 
     // POST
-    async POST(endpoint: string): Promise<string> {
+    async POST(endpoint: string): Promise<any> {
         console.log("POST: " + this.url + endpoint)
         axios.post(this.url + endpoint, {
             headers: {
