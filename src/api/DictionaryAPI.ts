@@ -17,38 +17,44 @@ export default class DictionaryClient {
     async getWordOfTheDay(): Promise<DefinitionDictAPI> {
             try {
                 const response: any = await httpClientWordnik.GET("/words.json/wordOfTheDay?api_key=" + TOKEN);
-                console.log("Response: " + response);
-
-                const wordOfTheDay = response?.word;       
                 
                 try {
+                    const wordOfTheDay = response?.word;       
                     const definition: DefinitionDictAPI = await this.getWordDefinition(wordOfTheDay);
+                    
                     return definition;
                 } catch (error) {
                     console.log("Error - getWordOfTheDay(Definition): " + error.message);  
                 }
 
             } catch (error) {
-                console.log("Failure: " + error.message);
+                console.log("Error - getWordOfTheDay: " + error.message);
                 return error.message
             }
 
         return;
     }
 
-    async getWordDefinition(query: string): Promise<DefinitionDictAPI>{
+    async getWordDefinition(word: string): Promise<DefinitionDictAPI> {
         try {
-            const response = await httpClientGoogleDict.GET("/entries/en/" + query);
-            const definition: DefinitionDictAPI = new DefinitionDictAPI(
-                response[0].meanings,
-                response[0].phoentics,
-                response[0].word
-            );
-            
-            return definition
-        
+            const response = await httpClientGoogleDict.GET("/entries/en/" + word);
+            if (response) {
+                const definition: DefinitionDictAPI = new DefinitionDictAPI(
+                    response[0].meanings,
+                    response[0].phoentics,
+                    response[0].word
+                );
+                return definition
+            } else {
+                const definition: DefinitionDictAPI = new DefinitionDictAPI(
+                    undefined,
+                    undefined,
+                    word
+                );
+                return definition;
+            }
         } catch (error) {
-            console.log("Failure: " + error.message);
+            console.log("Error - getWordDefinition: " + error.message);
             return error.message
         }
     }

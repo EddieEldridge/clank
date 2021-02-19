@@ -14,7 +14,7 @@ import { rollDice } from './dice/DiceRoller';
 // Classes
 import LOTRQuote from './models/lotr/LOTRQuote';
 import LOTRCharacter from './models/lotr/LOTRCharacter';
-import DefinitionDictAPI from './models/dictionary/DictionaryAPI/DefinitionDictAPI';
+import DefinitionDictAPI from './models/dictionary/DefinitionDictAPI';
 
 // Constructors
 const discordclient = new Discord.Client();
@@ -23,7 +23,7 @@ const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 
 // Variables
-const prefix = '!';
+let prefix: string = '>';
 
 // Login
 discordclient.login(authConfig.DISCORD_BOT_TOKEN);
@@ -45,7 +45,6 @@ discordclient.on('message', async (message) => {
     const argsContent = convertArrayToString(args, ',', true);
 
     console.log("\nMessage Recieved: " + message.content);
-    
 
     switch (command) {
 
@@ -57,7 +56,7 @@ discordclient.on('message', async (message) => {
                 );
             }
             message.reply(
-                'Alright, I added ' + argsContent + ' to the list of games!'
+                ' I added ' + argsContent + ' to the list of games!'
             );
 
             redisClient.addGame(argsContent);
@@ -76,8 +75,8 @@ discordclient.on('message', async (message) => {
         case 'removegame': {
             message.channel.send(
                 'Attempting to remove ' +
-                    argsContent +
-                    ' from the list of games...'
+                argsContent +
+                ' from the list of games...'
             );
             redisClient.removeGame(argsContent).then((redisPromise) => {
                 // console.log("Result: " + redisPromise.toString());
@@ -99,50 +98,63 @@ discordclient.on('message', async (message) => {
             break;
         }
 
-       // Dictionary 
+        // Dictionary 
         case 'wotd': {
             const wordOfTheDayDefinition: DefinitionDictAPI = await dictClient.getWordOfTheDay();
 
-            try {
-                const embed = new Discord.MessageEmbed()
-                .setColor('#344feb')
-                .setAuthor(wordOfTheDayDefinition?.word)
+            if (wordOfTheDayDefinition.meanings) {
+                try {
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#344feb')
+                        .setAuthor(wordOfTheDayDefinition?.word)
 
-                for(let i=0; i<wordOfTheDayDefinition.meanings.length; i++){
-                    embed.addFields(
-                    { name: '============ Definition ('+(i+1)+') ============' , value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
-                    { name: 'Example:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
-                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A'},
-                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
-                    { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
-                    { name: 'Part of Speech:  ', value: wordOfTheDayDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
-                    )
+                    for (let i = 0; i < wordOfTheDayDefinition.meanings.length; i++) {
+                        embed.addFields(
+                            { name: '============ Definition (' + (i + 1) + ') ============', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
+                            { name: 'Example:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
+                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A' },
+                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
+                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
+                            { name: 'Part of Speech:  ', value: wordOfTheDayDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
+                        )
+                    }
+                    message.channel.send(embed);
+                } catch (error) {
+                    console.log("Error - Word of the Day: " + error);
                 }
-                message.channel.send(embed);  
-            } catch (error) {
-                console.log("Error - Word of the Day: " + error);
+            } else {
+                message.reply("Todays word is **" + wordOfTheDayDefinition.word + "**. Unfortunately, I couldn't find a definition. Try again tomorrow!");
+                break;
             }
+
             break;
         }
 
         case 'define': {
             const wordDefinition: DefinitionDictAPI = await dictClient.getWordDefinition(argsContent);
-            const embed = new Discord.MessageEmbed()
-                .setColor('#344feb')
-                .setAuthor(wordDefinition?.word)
 
-                for(let i=0; i<wordDefinition.meanings.length; i++){
+            if (wordDefinition.meanings) {
+                const embed = new Discord.MessageEmbed()
+                    .setColor('#344feb')
+                    .setAuthor(wordDefinition?.word)
+
+                for (let i = 0; i < wordDefinition.meanings.length; i++) {
                     embed.addFields(
-                    { name: '============ Definition ('+(i+1)+') ============' , value: wordDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
-                    { name: 'Example:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
-                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A'},
-                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
-                    { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
-                    { name: 'Part of Speech:  ', value: wordDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
+                        { name: '============ Definition (' + (i + 1) + ') ============', value: wordDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
+                        { name: 'Example:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
+                        { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A' },
+                        { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
+                        { name: 'Synonyms:  ', value: wordDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
+                        { name: 'Part of Speech:  ', value: wordDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
                     )
                 }
-                message.channel.send(embed);                        
-            break;
+                message.channel.send(embed);
+                break;
+            } else {
+                message.reply("sorry. Unfortunately, I couldn't find a definition. Are you sure you spelled it correctly?");
+                break;
+            }
+
         }
 
         // Dice Roller
@@ -160,58 +172,65 @@ discordclient.on('message', async (message) => {
 
         // LOTR
         case 'lotrgc': {
-            if(!argsContent){
+            if (!argsContent) {
                 message.reply("specify a character!");
                 break;
             }
-            const randomLOTRCharacter: LOTRCharacter = await lotrClient.getCharacterMessage(argsContent);
-            const randomLOTRCharacterMessage: string =
-                "**Name: **" +
-                randomLOTRCharacter.name +
-                "\n" +
-                "**Race: **" +
-                randomLOTRCharacter.race +
-                "\n" +
-                "**Gender: **" +
-                randomLOTRCharacter.gender +
-                "\n" +
-                "**Birth: **" +
-                randomLOTRCharacter.birth +
-                "\n" +
-                "**Spouse: **" +
-                randomLOTRCharacter.spouse +
-                "\n" +
-                "**Death: **" +
-                randomLOTRCharacter.death +
-                "\n" +
-                "**Realm: **" +
-                randomLOTRCharacter.realm +
-                "\n" +
-                "**Hair: **" +
-                randomLOTRCharacter.hair +
-                "\n" +
-                "**Height: **" +
-                randomLOTRCharacter.height +
-                "\n" +
-                "**Wiki: **" +
-                randomLOTRCharacter.wikiUrl +
-                "\n";
-                
-            message.channel.send(randomLOTRCharacterMessage);
-            break;
+            const requestedLOTRCharacter: LOTRCharacter = await lotrClient.getCharacterMessage(argsContent);
+            if (requestedLOTRCharacter.name) {
+                const requestedLOTRCharacterMessage: string =
+                    "**Name: **" +
+                    requestedLOTRCharacter.name +
+                    "\n" +
+                    "**Race: **" +
+                    requestedLOTRCharacter.race +
+                    "\n" +
+                    "**Gender: **" +
+                    requestedLOTRCharacter.gender +
+                    "\n" +
+                    "**Birth: **" +
+                    requestedLOTRCharacter.birth +
+                    "\n" +
+                    "**Spouse: **" +
+                    requestedLOTRCharacter.spouse +
+                    "\n" +
+                    "**Death: **" +
+                    requestedLOTRCharacter.death +
+                    "\n" +
+                    "**Realm: **" +
+                    requestedLOTRCharacter.realm +
+                    "\n" +
+                    "**Hair: **" +
+                    requestedLOTRCharacter.hair +
+                    "\n" +
+                    "**Height: **" +
+                    requestedLOTRCharacter.height +
+                    "\n" +
+                    "**Wiki: **" +
+                    requestedLOTRCharacter.wikiUrl +
+                    "\n";
+
+                message.channel.send(requestedLOTRCharacterMessage);
+                break;
+            }
+            else {
+                message.reply("sorry. I couldn't find that character. Are you sure you spelled their name correctly?")
+                break;
+            }
+
         }
         case 'lotrq': {
             const randomLOTRQuote: LOTRQuote = await lotrClient.getRandomQuote();
 
             const randomLOTRQuoteMessage: string =
-            "**Quote: **" +
-            randomLOTRQuote.text +
-            "\n" +
-            "**Character: **" +
-            randomLOTRQuote.character +
-            "\n" +
-            "**Movie: **" +
-            randomLOTRQuote.movie;
+                "**Quote: **" +
+                randomLOTRQuote.text +
+                "\n" +
+                "**Character: **" +
+                randomLOTRQuote.character +
+                "\n" +
+                "**Movie: **" +
+                randomLOTRQuote.movie;
 
             message.channel.send(randomLOTRQuoteMessage);
             break;
@@ -227,9 +246,18 @@ discordclient.on('message', async (message) => {
             process.exit(0);
             break;
         }
+        case 'prefix': {
+            if (!argsContent) {
+                message.reply("specify a prefix!");
+                break;
+            }
+            prefix = argsContent;
+            message.reply("now I'll use the prefix " + argsContent + " instead of the default '>'.");
+            break;
+        }
         default: {
             message.reply(
-                "I'm sorry but I have no idea what you are talking about!"
+                "I'm sorry but I have no idea what you are talking about! Try using >help"
             );
             break;
         }

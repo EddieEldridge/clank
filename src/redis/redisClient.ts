@@ -23,7 +23,7 @@ export default class RedisClient {
             // Add game to Redist list of games
             return await tedis.lpush('games', gameName);
         } catch (tsError) {
-            console.log('Error: ' + tsError);
+            console.log('Error - addGame: ' + tsError);
             return;
         }
     }
@@ -33,7 +33,7 @@ export default class RedisClient {
             // List all games currently in cache
             return await tedis.lrange('games', 0, -1);
         } catch (error) {
-            console.log('Error: ' + error);
+            console.log('Error - listGames: ' + error);
             return;
         }
     }
@@ -44,7 +44,7 @@ export default class RedisClient {
             // List all games currently in cache
             return await tedis.lrem('games', 0, game);
         } catch (error) {
-            console.log('Error: ' + error);
+            console.log('Error - removeGame: ' + error);
             return;
         }
     }
