@@ -1,13 +1,9 @@
-<h1>Nothing to see here...</h1>
-
-**ToDo**
-* Word of the day
-* Dice roller
+<h1>ToDo</h1>
+* <s>Word of the day</s>
+* <s>Dice roller</s>
 * <s>CRUD for Redis game list</s>
-* Word definition
+* <s>Word definition</s>
 * Wiki search
 * Giphy search
 * Image search
-
-
-![alt text](http://getdrawings.com/img2/clank-drawing-15.jpg)
+* Tekken Tournament Ladder
