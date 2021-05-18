@@ -1,6 +1,6 @@
 import authInfo from '../../auth.json'
 import HTTPClient from '../utils/HttpClient';
-import DefinitionDictAPI from '../models/dictionary/definitionDictAPI';
+import DefinitionDictAPI from '../models/dictionary/DefinitionDictAPI';
 
 const TOKEN = authInfo.WORDNIK_API_TOKEN;
 

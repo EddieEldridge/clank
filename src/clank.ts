@@ -4,7 +4,7 @@ import authConfig from '../auth.json';
 
 // Classes
 import RedisClient from './redis/RedisClient';
-import DictionaryClient from './api/dictionaryAPI';
+import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import { convertArrayToString } from './utils/Utils';
 import { pickRandomElementFromArray } from './utils/Utils';
@@ -14,7 +14,7 @@ import { rollDice } from './dice/DiceRoller';
 // Classes
 import LOTRQuote from './models/lotr/LOTRQuote';
 import LOTRCharacter from './models/lotr/LOTRCharacter';
-import DefinitionDictAPI from './models/dictionary/definitionDictAPI';
+import DefinitionDictAPI from './models/dictionary/DefinitionDictAPI';
 
 // Constructors
 const discordclient = new Discord.Client();
