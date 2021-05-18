@@ -7,14 +7,14 @@ import RedisClient from './redis/RedisClient';
 import DictionaryClient from './api/dictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import { convertArrayToString } from './utils/Utils';
-import { pickRandomElement } from './utils/Utils';
+import { pickRandomElementFromArray } from './utils/Utils';
 import { showHelp } from './utils/Utils';
 import { rollDice } from './dice/DiceRoller';
 
 // Classes
 import LOTRQuote from './models/lotr/LOTRQuote';
 import LOTRCharacter from './models/lotr/LOTRCharacter';
-import DefinitionDictAPI from './models/dictionary/DefinitionDictAPI';
+import DefinitionDictAPI from './models/dictionary/definitionDictAPI';
 
 // Constructors
 const discordclient = new Discord.Client();
@@ -41,7 +41,7 @@ discordclient.on('message', async (message) => {
     // Split the message up by spaces to extract our arguments
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     console.log(args);
-    const command = args.shift().toLowerCase();
+    const command = args.shift();
     const argsContent = convertArrayToString(args, ',', true);
 
     console.log("\nMessage Recieved: " + message.content);
@@ -92,7 +92,7 @@ discordclient.on('message', async (message) => {
         case 'choosegame': {
             message.channel.send('Picking a random game to play...');
             redisClient.listGames().then((listOfGames) => {
-                const randomGame: string = pickRandomElement(listOfGames);
+                const randomGame: string = pickRandomElementFromArray(listOfGames);
                 message.channel.send('I choose **' + randomGame + '** !!!');
             });
             break;
@@ -100,22 +100,20 @@ discordclient.on('message', async (message) => {
 
         // Dictionary 
         case 'wotd': {
-            const wordOfTheDayDefinition: DefinitionDictAPI = await dictClient.getWordOfTheDay();
+            const wordOfTheDayDefinition: any = await dictClient.getWordOfTheDay();
 
-            if (wordOfTheDayDefinition.meanings) {
+            if (wordOfTheDayDefinition.definitions[0]) {
                 try {
                     const embed = new Discord.MessageEmbed()
                         .setColor('#344feb')
-                        .setAuthor(wordOfTheDayDefinition?.word)
+                        .setTitle(wordOfTheDayDefinition?.word)
 
-                    for (let i = 0; i < wordOfTheDayDefinition.meanings.length; i++) {
+                    for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: '============ Definition (' + (i + 1) + ') ============', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.definition || 'N/A' },
-                            { name: 'Example:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.example ?? 'N/A' },
-                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[0] ?? 'N/A' },
-                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[1] ?? 'N/A' },
-                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition?.meanings[i]?.definitions[0]?.synonyms?.[2] ?? 'N/A' },
-                            { name: 'Part of Speech:  ', value: wordOfTheDayDefinition?.meanings[i]?.partOfSpeech ?? 'N/A' },
+                            { name: 'Source:  ', value: wordOfTheDayDefinition.definitions[0].text ?? 'N/A' },
+                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition.definitions[0].source ?? 'N/A' },
+                            { name: 'Part of Speech:  ', value: wordOfTheDayDefinition.definitions[0].partOfSpeech ?? 'N/A' },
+                            { name: 'Example:  ', value: wordOfTheDayDefinition.examples[0].text ?? 'N/A' },
                         )
                     }
                     message.channel.send(embed);
@@ -234,6 +232,13 @@ discordclient.on('message', async (message) => {
 
             message.channel.send(randomLOTRQuoteMessage);
             break;
+        }
+
+        // Tekken
+        case 'startTournament': {
+            message.reply(
+                "What kind of tournament do you want to play?"
+            ); break;
         }
 
         // Utils

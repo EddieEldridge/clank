@@ -1,6 +1,6 @@
 import authInfo from '../../auth.json'
 import HTTPClient from '../utils/HttpClient';
-import DefinitionDictAPI from '../models/dictionary/DefinitionDictAPI';
+import DefinitionDictAPI from '../models/dictionary/definitionDictAPI';
 
 const TOKEN = authInfo.WORDNIK_API_TOKEN;
 
@@ -18,15 +18,11 @@ export default class DictionaryClient {
             try {
                 const response: any = await httpClientWordnik.GET("/words.json/wordOfTheDay?api_key=" + TOKEN);
                 
-                try {
-                    const wordOfTheDay = response?.word;       
-                    const definition: DefinitionDictAPI = await this.getWordDefinition(wordOfTheDay);
-                    
-                    return definition;
+                try {                    
+                    return response;
                 } catch (error) {
                     console.log("Error - getWordOfTheDay(Definition): " + error.message);  
                 }
-
             } catch (error) {
                 console.log("Error - getWordOfTheDay: " + error.message);
                 return error.message
@@ -37,7 +33,7 @@ export default class DictionaryClient {
 
     async getWordDefinition(word: string): Promise<DefinitionDictAPI> {
         try {
-            const response = await httpClientGoogleDict.GET("/entries/en/" + word);
+            const response: any = await httpClientGoogleDict.GET("/entries/en/" + word);
             if (response) {
                 const definition: DefinitionDictAPI = new DefinitionDictAPI(
                     response[0].meanings,

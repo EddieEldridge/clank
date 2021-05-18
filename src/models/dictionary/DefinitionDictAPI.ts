@@ -6,6 +6,9 @@ class DefinitionDictAPI{
     meanings: Array<Meanings>;
     phonetics: Array<Phonetics>;
     word: string;
+    text: string;
+    source: string;
+    partofSpeech: string;
 
     constructor(meanings: Array<Meanings>, phonetics: Array<Phonetics>, word: string){
         this.meanings = meanings;

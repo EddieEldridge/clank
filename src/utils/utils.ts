@@ -15,13 +15,8 @@ export function convertArrayToString(
     }
 }
 
-export function pickRandomElement(array: Array<string>): string {
+export function pickRandomElementFromArray(array: Array<string>): string {
     try {
-        // Add Decides
-        array.push('Luke decides');
-        array.push('Eddie decides');
-        array.push('Michael decides');
-
         return array[Math.floor(Math.random() * array.length)];
     } catch (error) {
         console.log(error);
