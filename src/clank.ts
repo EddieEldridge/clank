@@ -121,7 +121,7 @@ discordclient.on('message', async (message) => {
                     console.log("Error - Word of the Day: " + error);
                 }
             } else {
-                message.reply("Todays word is **" + wordOfTheDayDefinition.word + "**. Unfortunately, I couldn't find a definition. Try again tomorrow!");
+                // message.reply("Todays word is **" + wordOfTheDayDefinition.word + "**. Unfortunately, I couldn't find a definition. Try again tomorrow!");
                 break;
             }
 
