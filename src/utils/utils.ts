@@ -32,7 +32,7 @@ export function showHelp(): string {
         '3. *roll* - Roll a dice. Same format as Roll20\n' +
         '4. *lotrgc* - Get info about a Lord of the Rings Character\n' +
         '5. *lotrq* - Get a random quote from a Lord of the Rings\n' +
-        '6. *prefix* - Change the default ">" prefix that clank uses\n';
+        '6. *yugioh* - Get a random Yugioh card\n';
         return helpCommands;
     } catch (error) {
         console.log(error);
