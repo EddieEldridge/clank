@@ -6,6 +6,7 @@ import authConfig from '../auth.json';
 import RedisClient from './redis/RedisClient';
 import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
+import YugiohAPI from './api/YugiohAPI'
 import { convertArrayToString } from './utils/Utils';
 import { pickRandomElementFromArray } from './utils/Utils';
 import { showHelp } from './utils/Utils';
@@ -21,6 +22,7 @@ const discordclient = new Discord.Client();
 const redisClient = new RedisClient();
 const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
+const yugiohClient = new YugiohAPI();
 
 // Variables
 let prefix: string = '>';
@@ -260,12 +262,22 @@ discordclient.on('message', async (message) => {
             message.reply("now I'll use the prefix " + argsContent + " instead of the default '>'.");
             break;
         }
+        case 'yugioh': {
+            const yugiohCard: any = await yugiohClient.getRandomCard();
+            console.log(yugiohCard);
+            
+
+            message.channel.send(yugiohCard.card_images[0].image_url);
+            message.channel.send("**Price:** " + yugiohCard.card_prices[0].amazon_price);
+            break;
+        }
         default: {
             message.reply(
                 "I'm sorry but I have no idea what you are talking about! Try using >help"
             );
             break;
         }
+        
     }
 });
 
