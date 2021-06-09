@@ -112,12 +112,23 @@ discordclient.on('message', async (message) => {
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: 'Source:  ', value: wordOfTheDayDefinition.definitions[0].text ?? 'N/A' },
-                            { name: 'Synonyms:  ', value: wordOfTheDayDefinition.definitions[0].source ?? 'N/A' },
-                            { name: 'Part of Speech:  ', value: wordOfTheDayDefinition.definitions[0].partOfSpeech ?? 'N/A' },
-                            { name: 'Example:  ', value: wordOfTheDayDefinition.examples[0].text ?? 'N/A' },
+                            { name: 'Definition ' + i + ':  ', value: wordOfTheDayDefinition.definitions[i].text ?? 'N/A' },
+                            { name: 'Part of Speech ' + i + ':  ', value: wordOfTheDayDefinition.definitions[i].partOfSpeech ?? 'N/A' }
                         )
+                        if(i==2){
+                            break;
+                        }
                     }
+
+                    for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
+                        embed.addFields(
+                            { name: 'Example ' + i + ':  ', value: wordOfTheDayDefinition.examples[i].text ?? 'N/A' }
+                        );    
+                        if(i==2){
+                            break;
+                        }
+                    }
+                    
                     message.channel.send(embed);
                 } catch (error) {
                     console.log("Error - Word of the Day: " + error);

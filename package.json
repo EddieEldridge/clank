@@ -35,6 +35,7 @@
   "scripts": {
     "compile": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/*.ts",
+    "start": "ts-node-dev --respawn --transpile-only src/*.ts",
     "dockerBuild": "docker build --rm -t steadyeddie/clank .",
     "dockerRun": "docker run -d steadyeddie/clank",
     "lint": "eslint ./src/*",
