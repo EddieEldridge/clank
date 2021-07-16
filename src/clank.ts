@@ -10,7 +10,7 @@ import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
 import { capitalize, convertArrayToString } from './utils/utils';
 import { pickRandomElementFromArray, showHelp } from './utils/utils';
-import { rollDice } from './dice/DiceRoller';
+import { rollDice } from './dice/diceRoller';
 
 // Classes
 import LOTRQuote from './models/lotr/LOTRQuote';
