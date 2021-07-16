@@ -7,7 +7,8 @@ import RedisClient from './redis/RedisClient';
 import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
-import { convertArrayToString } from './utils/Utils';
+import PokemonAPI from './api/PokemonAPI'
+import { capitalize, convertArrayToString } from './utils/Utils';
 import { pickRandomElementFromArray } from './utils/Utils';
 import { showHelp } from './utils/Utils';
 import { rollDice } from './dice/DiceRoller';
@@ -23,6 +24,7 @@ const redisClient = new RedisClient();
 const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 const yugiohClient = new YugiohAPI();
+const pokemonClient = new PokemonAPI();
 
 // Variables
 let prefix: string = '>';
@@ -100,7 +102,7 @@ discordclient.on('message', async (message) => {
             break;
         }
 
-        // Dictionary 
+        // Dictionary
         case 'wotd': {
             const wordOfTheDayDefinition: any = await dictClient.getWordOfTheDay();
 
@@ -112,8 +114,8 @@ discordclient.on('message', async (message) => {
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: 'Definition ' + i + ':  ', value: wordOfTheDayDefinition.definitions[i].text ?? 'N/A' },
-                            { name: 'Part of Speech ' + i + ':  ', value: wordOfTheDayDefinition.definitions[i].partOfSpeech ?? 'N/A' }
+                            { name: 'Definition ' + (i+1) + ':  ', value: wordOfTheDayDefinition.definitions[i].text ?? 'N/A' },
+                            { name: 'Part of Speech ' + (i+1) + ':  ', value: wordOfTheDayDefinition.definitions[i].partOfSpeech ?? 'N/A' }
                         )
                         if(i==2){
                             break;
@@ -122,13 +124,13 @@ discordclient.on('message', async (message) => {
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: 'Example ' + i + ':  ', value: wordOfTheDayDefinition.examples[i].text ?? 'N/A' }
-                        );    
+                            { name: 'Example ' + (i+1) + ':  ', value: wordOfTheDayDefinition.examples[i].text ?? 'N/A' }
+                        );
                         if(i==2){
                             break;
                         }
                     }
-                    
+
                     message.channel.send(embed);
                 } catch (error) {
                     console.log("Error - Word of the Day: " + error);
@@ -276,19 +278,64 @@ discordclient.on('message', async (message) => {
         case 'yugioh': {
             const yugiohCard: any = await yugiohClient.getRandomCard();
             console.log(yugiohCard);
-            
+
 
             message.channel.send(yugiohCard.card_images[0].image_url);
-            message.channel.send("**Price:** " + yugiohCard.card_prices[0].amazon_price);
+            message.channel.send("**Price ($):** " + yugiohCard.card_prices[0].amazon_price);
             break;
         }
+        case 'pokemon': {
+            const randomPokemon: any = await pokemonClient.getRandomPokemon();
+            const randomNumber: number = Math.floor(Math.random() * 100)
+
+            message.channel.send("\n**A wild " + capitalize(randomPokemon.name) + " has appeared!**");
+
+
+            message.channel.send(randomPokemon.sprites.other['official-artwork'].front_default);
+            message.channel.send("\n**Name:** " + capitalize(randomPokemon.name));
+            message.channel.send("\n**Level:** " + randomNumber);
+
+            for(const pokemonType in randomPokemon.types){
+                message.channel.send("**Type:** " + capitalize(randomPokemon.types[pokemonType].type.name));
+            }
+
+            if(randomNumber==69){
+                message.reply("**Unbelievable! This one is shiny!**")
+                message.channel.send(randomPokemon.sprites.front_shiny);
+            }
+
+
+            break;
+        }
+        case 'pokemove': {
+            const randomPokemove: any = await pokemonClient.getRandomPokemove();
+            let count: number = 0;
+
+            message.channel.send("\n**Name** \n" + capitalize(randomPokemove.name));
+            message.channel.send("\n**Type** \n" + capitalize(randomPokemove.type.name));
+
+            for(let i = 0; i < randomPokemove.flavor_text_entries.length; i++){
+                const flavourTextEntry: any = randomPokemove.flavor_text_entries[i];
+
+                if(count>=1){
+                    break;
+                }
+
+                if(flavourTextEntry?.language?.name === 'en'){
+                    message.channel.send("**Description** \n" + flavourTextEntry.flavor_text);
+                    count = count+1;
+                    }
+                }
+
+            }
+            break;
         default: {
             message.reply(
                 "I'm sorry but I have no idea what you are talking about! Try using >help"
             );
             break;
         }
-        
+
     }
 });
 

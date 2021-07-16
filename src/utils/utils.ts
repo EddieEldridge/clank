@@ -25,14 +25,16 @@ export function pickRandomElementFromArray(array: Array<string>): string {
 
 export function showHelp(): string {
     try {
-        const helpCommands: string = 
+        const helpCommands: string =
         '=== Commands ===\n' +
-        '1. *wotd* - Word of the Day\n' + 
-        '2. *define* - Define a given word\n' + 
+        '1. *wotd* - Word of the Day\n' +
+        '2. *define* - Define a given word\n' +
         '3. *roll* - Roll a dice. Same format as Roll20\n' +
         '4. *lotrgc* - Get info about a Lord of the Rings Character\n' +
         '5. *lotrq* - Get a random quote from a Lord of the Rings\n' +
         '6. *yugioh* - Get a random Yugioh card\n';
+        '7. *pokemon* - Get a random Pokemon\n';
+        '8. *pokemove* - Get a random Pokemon move\n';
         return helpCommands;
     } catch (error) {
         console.log(error);
@@ -55,3 +57,8 @@ export function printResponse(response: any) {
     // console.log(response.config);
     return "";
 }
+
+export function capitalize (s: string): string {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
