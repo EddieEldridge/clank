@@ -9,8 +9,7 @@ import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
 import { capitalize, convertArrayToString } from './utils/utils';
-import { pickRandomElementFromArray } from './utils/utils';
-import { showHelp } from './utils/utils';
+import { pickRandomElementFromArray, showHelp } from './utils/utils';
 import { rollDice } from './dice/DiceRoller';
 
 // Classes

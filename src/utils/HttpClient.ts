@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { printResponse } from './Utils';
+import { printResponse } from './utils';
 
 
 export default class HTTPClient {
