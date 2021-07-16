@@ -3,14 +3,14 @@ import * as Discord from 'discord.js';
 import authConfig from '../auth.json';
 
 // Classes
-import RedisClient from './redis/RedisClient';
+import RedisClient from './redis/redisClient';
 import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
-import { capitalize, convertArrayToString } from './utils/Utils';
-import { pickRandomElementFromArray } from './utils/Utils';
-import { showHelp } from './utils/Utils';
+import { capitalize, convertArrayToString } from './utils/utils';
+import { pickRandomElementFromArray } from './utils/utils';
+import { showHelp } from './utils/utils';
 import { rollDice } from './dice/DiceRoller';
 
 // Classes
