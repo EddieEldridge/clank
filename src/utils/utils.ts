@@ -35,6 +35,8 @@ export function showHelp(): string {
         '6. *yugioh* - Get a random Yugioh card\n';
         '7. *pokemon* - Get a random Pokemon\n';
         '8. *pokemove* - Get a random Pokemon move\n';
+        '9. *hotd* - Get a random historical event for the day\n';
+        '10. *define {word}* - Get the definition of a word\n';
         return helpCommands;
     } catch (error) {
         console.log(error);

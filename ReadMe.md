@@ -5,7 +5,8 @@
 * Get a random yugioh card
 * Get a random Pokemon
 * Get a random Pokemon move
-* Get a random Lord of the Rings quote 
+* Get a random Lord of the Rings quote
+* Get a random historical event for the day
 * Get information about a specific Lord of the Rings character
 * Get the Word of the Day
 * Get definition of any word
@@ -19,15 +20,15 @@ Clank is currently running in a super secure secret cloud instance that's not de
 You'll need Typescript installed as well as Node/NPM. Versions shouldn't matter.
 
 * ```npm run dev``` to develop
-* ```npm run start``` to start 
-* ```npm run test``` to run the tests 
-* ```npm run lint``` to run the linter 
+* ```npm run start``` to start
+* ```npm run test``` to run the tests
+* ```npm run lint``` to run the linter
 
 **Optional**
 
 You can also run this inside of a Docker container
 * ```npm run dockerBuild``` to build the Docker image
-* ```npm run dockerRun``` to run the Docker image 
+* ```npm run dockerRun``` to run the Docker image
 
 <h2>To-Do</h2>
 
