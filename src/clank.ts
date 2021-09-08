@@ -8,6 +8,7 @@ import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
+import HistoryAPI from './api/HistoryAPI'
 import { capitalize, convertArrayToString } from './utils/utils';
 import { pickRandomElementFromArray, showHelp } from './utils/utils';
 import { rollDice } from './dice/diceRoller';
@@ -24,6 +25,7 @@ const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 const yugiohClient = new YugiohAPI();
 const pokemonClient = new PokemonAPI();
+const historyClient = new HistoryAPI();
 
 // Variables
 let prefix: string = '>';
@@ -109,7 +111,7 @@ discordclient.on('message', async (message) => {
                 try {
                     const embed = new Discord.MessageEmbed()
                         .setColor('#344feb')
-                        .setTitle(wordOfTheDayDefinition?.word)
+                        .setTitle(wordOfTheDayDefinition.word)
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
@@ -141,6 +143,49 @@ discordclient.on('message', async (message) => {
 
             break;
         }
+
+         // History Fact
+         case 'hotd': {
+            const historyOfTheDay: any = await historyClient.getHistoryOfTheDay();
+            console.log('\n💡 ---------------------------------------');
+            console.log('\n💡 | historyOfTheDay', historyOfTheDay);
+            console.log('\n💡 ---------------------------------------');
+
+
+            if (historyOfTheDay) {
+                const currentDate: string = historyOfTheDay?.date;
+                const events: any[] = historyOfTheDay?.data?.Events;
+                // const Births: any[] = historyOfTheDay?.data?.Births;
+                // const Deaths: any[] = historyOfTheDay?.data?.Deaths;
+                const eventsLength: number = historyOfTheDay?.data?.Events?.length;
+
+                const randomEventNum: number = Math.floor(Math.random() * eventsLength)
+                const randomEvent = events[randomEventNum];
+                console.log('\n💡 -------------------------------');
+                console.log('\n💡 | randomEvent', randomEvent);
+                console.log('\n💡 -------------------------------');
+
+                const embed = new Discord.MessageEmbed()
+                        .setColor('#d39104')
+                        .setTitle(currentDate)
+                embed.addFields(
+                    { name: 'Year', value: randomEvent.year},
+                    { name: 'Event', value: randomEvent.text}
+                )
+
+                try {
+                    message.channel.send(embed);
+                } catch (error) {
+                    console.log("Error - History of the Day: " + error);
+                }
+            } else {
+                // message.reply("Todays word is **" + wordOfTheDayDefinition.word + "**. Unfortunately, I couldn't find a definition. Try again tomorrow!");
+                break;
+            }
+
+            break;
+        }
+
 
         case 'define': {
             const wordDefinition: DefinitionDictAPI = await dictClient.getWordDefinition(argsContent);
