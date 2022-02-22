@@ -33,10 +33,11 @@ export function showHelp(): string {
         '4. *lotrgc* - Get info about a Lord of the Rings Character\n' +
         '5. *lotrq* - Get a random quote from a Lord of the Rings\n' +
         '6. *yugioh* - Get a random Yugioh card\n';
-        '7. *pokemon* - Get a random Pokemon\n';
-        '8. *pokemove* - Get a random Pokemon move\n';
-        '9. *hotd* - Get a random historical event for the day\n';
-        '10. *define {word}* - Get the definition of a word\n';
+        '7. *yugiohs* - Get information about a specific Yugioh card\n';
+        '8. *pokemon* - Get a random Pokemon\n';
+        '9. *pokemove* - Get a random Pokemon move\n';
+        '10. *hotd* - Get a random historical event for the day\n';
+        '11. *define {word}* - Get the definition of a word\n';
         return helpCommands;
     } catch (error) {
         console.log(error);

@@ -8,6 +8,7 @@
 * Get a random Lord of the Rings quote
 * Get a random historical event for the day
 * Get information about a specific Lord of the Rings character
+* Get information about a specific Yugioh card
 * Get the Word of the Day
 * Get definition of any word
 * Integrated dice roller
