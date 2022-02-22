@@ -7,8 +7,29 @@ export default class YugiohAPI {
       const randomCard = await httpClient.GET(
         "/randomcard.php"
       );
-      
+
       return randomCard;
+    } catch (error) {
+      console.log("Error - getRandomCard: " + error.message);
+      return error.message;
+    }
+  }
+
+  async getCard(cardName: string): Promise<any> {
+    try {
+      const cardResults = await httpClient.GET(
+        `/cardinfo.php?name=${cardName}&misc=yes`
+      );
+
+      if(!cardResults){
+        return undefined;
+      }
+
+      console.log('\n ========================');
+      console.log(cardResults.data[0].misc_info);
+      console.log('\n ========================');
+
+      return cardResults.data[0];
     } catch (error) {
       console.log("Error - getRandomCard: " + error.message);
       return error.message;

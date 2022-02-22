@@ -326,6 +326,23 @@ discordclient.on('message', async (message) => {
 
             message.channel.send(yugiohCard.card_images[0].image_url);
             message.channel.send("**Price ($):** " + yugiohCard.card_prices[0].amazon_price);
+            message.channel.send("**Set:** " + yugiohCard.card_prices[0].amazon_price);
+            break;
+        }
+        case 'yugiohs': {
+            if (!argsContent) {
+                message.reply("Please specify a card name!");
+                break;
+            }
+            const yugiohCards: any = await yugiohClient.getCard(argsContent);
+
+            if(!yugiohCards){
+                message.channel.send('Sorry, that card was not found.')
+            }
+
+            message.channel.send(`${yugiohCards.card_images[0].image_url}
+           `);
+           message.channel.send(`**Price ($):** ${yugiohCards.card_prices[0].amazon_price}\n**Release Date:** ${yugiohCards?.misc_info[0]?.tcg_date}`)
             break;
         }
         case 'pokemon': {
