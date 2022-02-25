@@ -28,7 +28,7 @@ const pokemonClient = new PokemonAPI();
 const historyClient = new HistoryAPI();
 
 // Variables
-let prefix: string = '>';
+let prefix: string = '!';
 
 // Login
 discordclient.login(authConfig.DISCORD_BOT_TOKEN);
@@ -334,7 +334,7 @@ discordclient.on('message', async (message) => {
                 message.reply("Please specify a card name!");
                 break;
             }
-            const yugiohCards: any = await yugiohClient.getCard(argsContent);
+            const yugiohCards: any = await yugiohClient.getCard(encodeURIComponent(argsContent));
 
             if(!yugiohCards){
                 message.channel.send('Sorry, that card was not found.')
