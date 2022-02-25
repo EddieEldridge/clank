@@ -18,7 +18,7 @@ export default class YugiohAPI {
   async getCard(cardName: string): Promise<any> {
     try {
       const cardResults = await httpClient.GET(
-        `/cardinfo.php?name=${cardName}&misc=yes`
+        `/cardinfo.php?fname=${cardName}&misc=yes`
       );
 
       if(!cardResults){
