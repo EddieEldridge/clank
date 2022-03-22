@@ -325,8 +325,7 @@ discordclient.on('message', async (message) => {
 
 
             message.channel.send(yugiohCard.card_images[0].image_url);
-            message.channel.send("**Price ($):** " + yugiohCard.card_prices[0].amazon_price);
-            message.channel.send("**Set:** " + yugiohCard.card_prices[0].amazon_price);
+            message.channel.send("**Price ($):** " + yugiohCard.card_prices[0].cardmarket_price);
             break;
         }
         case 'yugiohs': {
@@ -336,13 +335,20 @@ discordclient.on('message', async (message) => {
             }
             const yugiohCards: any = await yugiohClient.getCard(encodeURIComponent(argsContent));
 
-            if(!yugiohCards){
-                message.channel.send('Sorry, that card was not found.')
+            console.log('\n ========================');
+            console.log(yugiohCards);
+            console.log('\n ========================');
+
+            if(yugiohCards?.message){
+                message.channel.send(yugiohCards?.message)
+
+                if(!yugiohCards?.data){
+                    break;
+                }
             }
 
-            message.channel.send(`${yugiohCards.card_images[0].image_url}
-           `);
-           message.channel.send(`**Price ($):** ${yugiohCards.card_prices[0].amazon_price}\n**Release Date:** ${yugiohCards?.misc_info[0]?.tcg_date}`)
+            message.channel.send(`${yugiohCards?.data?.card_images[0].image_url}`);
+            message.channel.send(`**Price ($):** ${yugiohCards?.data?.card_prices[0]?.cardmarket_price}\n**Release Date:** ${yugiohCards?.data?.misc_info[0]?.tcg_date}`)
             break;
         }
         case 'pokemon': {
