@@ -37,6 +37,7 @@ You can also run this inside of a Docker container
 * Giphy search
 * Image search
 * Tekken Tournament Ladder
+* More stuff
 
 ![Clank](https://i.imgur.com/YXkyV.jpeg)
 
