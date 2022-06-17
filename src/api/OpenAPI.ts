@@ -19,11 +19,6 @@ export default class OpenAPI {
             max_tokens: 300
         });
 
-        console.log(completion?.data?.choices);
-        
-
-        printResponse(completion);
-
         const predicition = completion?.data?.choices[0].text
 
 

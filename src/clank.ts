@@ -403,11 +403,12 @@ discordclient.on('message', async (message) => {
                 break;
             }
 
-            message.channel.send("Hmmmmm.. let me think....");
+            const sentMessage = await message.channel.send("Hmmmmm.. let me think....");
+            console.log(sentMessage);
 
             const completion: any = await openAPIClient.getCompletion(argsContent);
 
-            message.channel.send(completion);
+            sentMessage.edit(completion)
         }
             break;
         default: {
@@ -419,5 +420,3 @@ discordclient.on('message', async (message) => {
 
     }
 });
-
-console.log();
