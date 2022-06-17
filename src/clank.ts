@@ -9,6 +9,7 @@ import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
 import HistoryAPI from './api/HistoryAPI'
+import OpenAPI from './api/OpenAPI'
 import { capitalize, convertArrayToString } from './utils/utils';
 import { pickRandomElementFromArray, showHelp } from './utils/utils';
 import { rollDice } from './dice/diceRoller';
@@ -26,6 +27,7 @@ const dictClient = new DictionaryClient();
 const yugiohClient = new YugiohAPI();
 const pokemonClient = new PokemonAPI();
 const historyClient = new HistoryAPI();
+const openAPIClient = new OpenAPI();
 
 // Variables
 let prefix: string = '!';
@@ -115,19 +117,19 @@ discordclient.on('message', async (message) => {
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: 'Definition ' + (i+1) + ':  ', value: wordOfTheDayDefinition.definitions[i].text ?? 'N/A' },
-                            { name: 'Part of Speech ' + (i+1) + ':  ', value: wordOfTheDayDefinition.definitions[i].partOfSpeech ?? 'N/A' }
+                            { name: 'Definition ' + (i + 1) + ':  ', value: wordOfTheDayDefinition.definitions[i].text ?? 'N/A' },
+                            { name: 'Part of Speech ' + (i + 1) + ':  ', value: wordOfTheDayDefinition.definitions[i].partOfSpeech ?? 'N/A' }
                         )
-                        if(i==2){
+                        if (i == 2) {
                             break;
                         }
                     }
 
                     for (let i = 0; i < wordOfTheDayDefinition.definitions.length; i++) {
                         embed.addFields(
-                            { name: 'Example ' + (i+1) + ':  ', value: wordOfTheDayDefinition.examples[i].text ?? 'N/A' }
+                            { name: 'Example ' + (i + 1) + ':  ', value: wordOfTheDayDefinition.examples[i].text ?? 'N/A' }
                         );
-                        if(i==2){
+                        if (i == 2) {
                             break;
                         }
                     }
@@ -144,8 +146,8 @@ discordclient.on('message', async (message) => {
             break;
         }
 
-         // History Fact
-         case 'hotd': {
+        // History Fact
+        case 'hotd': {
             const historyOfTheDay: any = await historyClient.getHistoryOfTheDay();
             console.log('\n💡 ---------------------------------------');
             console.log('\n💡 | historyOfTheDay', historyOfTheDay);
@@ -166,11 +168,11 @@ discordclient.on('message', async (message) => {
                 console.log('\n💡 -------------------------------');
 
                 const embed = new Discord.MessageEmbed()
-                        .setColor('#d39104')
-                        .setTitle(currentDate)
+                    .setColor('#d39104')
+                    .setTitle(currentDate)
                 embed.addFields(
-                    { name: 'Year', value: randomEvent.year},
-                    { name: 'Event', value: randomEvent.text}
+                    { name: 'Year', value: randomEvent.year },
+                    { name: 'Event', value: randomEvent.text }
                 )
 
                 try {
@@ -339,10 +341,10 @@ discordclient.on('message', async (message) => {
             console.log(yugiohCards);
             console.log('\n ========================');
 
-            if(yugiohCards?.message){
+            if (yugiohCards?.message) {
                 message.channel.send(yugiohCards?.message)
 
-                if(!yugiohCards?.data){
+                if (!yugiohCards?.data) {
                     break;
                 }
             }
@@ -362,11 +364,11 @@ discordclient.on('message', async (message) => {
             message.channel.send("\n**Name:** " + capitalize(randomPokemon.name));
             message.channel.send("\n**Level:** " + randomNumber);
 
-            for(const pokemonType in randomPokemon.types){
+            for (const pokemonType in randomPokemon.types) {
                 message.channel.send("**Type:** " + capitalize(randomPokemon.types[pokemonType].type.name));
             }
 
-            if(randomNumber==69){
+            if (randomNumber == 69) {
                 message.reply("**Unbelievable! This one is shiny!**")
                 message.channel.send(randomPokemon.sprites.front_shiny);
             }
@@ -381,20 +383,32 @@ discordclient.on('message', async (message) => {
             message.channel.send("\n**Name** \n" + capitalize(randomPokemove.name));
             message.channel.send("\n**Type** \n" + capitalize(randomPokemove.type.name));
 
-            for(let i = 0; i < randomPokemove.flavor_text_entries.length; i++){
+            for (let i = 0; i < randomPokemove.flavor_text_entries.length; i++) {
                 const flavourTextEntry: any = randomPokemove.flavor_text_entries[i];
 
-                if(count>=1){
+                if (count >= 1) {
                     break;
                 }
 
-                if(flavourTextEntry?.language?.name === 'en'){
+                if (flavourTextEntry?.language?.name === 'en') {
                     message.channel.send("**Description** \n" + flavourTextEntry.flavor_text);
-                    count = count+1;
-                    }
+                    count = count + 1;
                 }
-
             }
+
+        }
+        case 'ai': {
+            if (!argsContent) {
+                message.reply("Please specify a card name!");
+                break;
+            }
+
+            message.channel.send("Hmmmmm.. let me think....");
+
+            const completion: any = await openAPIClient.getCompletion(argsContent);
+
+            message.channel.send(completion);
+        }
             break;
         default: {
             message.reply(
