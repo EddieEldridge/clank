@@ -13,6 +13,7 @@
 * Get definition of any word
 * Integrated dice roller
 * Maintain a list of games that you can choose from randomly
+* Ask Google's OpenAI anything
 
 <h2> Hosting </h2>
 Clank is currently running in a super secure secret cloud instance that's not definitely not an AWS EC2 instance.
