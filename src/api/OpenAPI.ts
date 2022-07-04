@@ -14,7 +14,7 @@ export default class OpenAPI {
         const completion = await openai.createCompletion({
             model: "text-davinci-002",
             prompt: thingToComplete,
-            max_tokens: 600
+            max_tokens: 300
         });
 
         const predicition = completion?.data?.choices[0].text
