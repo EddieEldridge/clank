@@ -399,7 +399,7 @@ discordclient.on('message', async (message) => {
         }
         case 'ai': {
             if (!argsContent) {
-                message.reply("Please specify a card name!");
+                message.reply("Please ask me something!");
                 break;
             }
 
