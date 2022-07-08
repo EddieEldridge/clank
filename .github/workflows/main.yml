@@ -28,15 +28,12 @@ jobs:
       # 2. Install the dependencies
       # 3. Restart the application
       - name: Deploy in EC2
-        env:
-            PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY  }}
-            HOSTNAME : ${{ secrets.HOSTNAME  }}
-            USER_NAME : ${{ secrets.USER  }}
-
-        run: |
-            echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOSTNAME }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
               cd /home/ubuntu/projects/clank
               npm ci
 
@@ -45,4 +42,3 @@ jobs:
               git reset --hard origin/master &&
               git pull origin master &&
               pm2 restart clank-bot
-            '
