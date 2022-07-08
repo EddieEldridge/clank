@@ -35,13 +35,14 @@ jobs:
 
         run: |
             echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
-            cd /home/ubuntu/projects/clank
-            npm ci
+              cd /home/ubuntu/projects/clank
+              npm ci
 
-            git checkout master &&
-            git fetch --all &&
-            git reset --hard origin/master &&
-            git pull origin master &&
-            pm2 restart clank-bot
+              git checkout master &&
+              git fetch --all &&
+              git reset --hard origin/master &&
+              git pull origin master &&
+              pm2 restart clank-bot
+            '
