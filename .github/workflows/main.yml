@@ -44,7 +44,7 @@ jobs:
       #         pm2 restart clank-bot
 
       - name: ls -a via ssh
-        uses: fifsky/ssh-action@master
+        uses: garygrossgarten/github-action-ssh@release
         with:
           command: |
             PATH=$PATH:/home/ubuntu/.nvm/versions/node/v14.14.0/bin/
@@ -61,5 +61,5 @@ jobs:
             pm2 restart clank-bot
 
           host: ${{ secrets.HOSTNAME }}
-          user: ${{ secrets.USER }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          username: ${{ secrets.USER }}
+          privateKey: ${{ secrets.EC2_PRIVATE_KEY }}
