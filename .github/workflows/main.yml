@@ -49,6 +49,8 @@ jobs:
           command: |
               cd /home/ubuntu/projects/clank
               npm ci
+              whoami
+              ls -l
 
               git checkout master &&
               git fetch --all &&
