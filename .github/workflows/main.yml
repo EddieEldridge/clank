@@ -46,20 +46,19 @@ jobs:
       - name: ls -a via ssh
         uses: fifsky/ssh-action@master
         with:
-          # command: |
-          #   cd /home/ubuntu/projects/clank
-          #   npm ci
-          #   whoami
-          #   ls -l
-
-          #   git checkout master &&
-          #   git fetch --all &&
-          #   git reset --hard origin/master &&
-          #   git pull origin master &&
-          #   pm2 restart clank-bot
           command: |
-            ls -l
+            PATH=$PATH:/home/ubuntu/.nvm/versions/node/v14.14.0/bin/
+            pm2 -v
+            cd /home/ubuntu/projects/clank
+            npm ci
             whoami
+            ls -l
+
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            pm2 restart clank-bot
 
           host: ${{ secrets.HOSTNAME }}
           user: ${{ secrets.USER }}
