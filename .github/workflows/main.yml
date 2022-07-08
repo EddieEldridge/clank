@@ -27,13 +27,26 @@ jobs:
       # 1. Checkout the latest version of the project
       # 2. Install the dependencies
       # 3. Restart the application
-      - name: Deploy in EC2
-        uses: appleboy/ssh-action@master
+      # - name: Deploy in EC2
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOSTNAME }}
+      #     username: ${{ secrets.USER }}
+      #     key: ${{ secrets.EC2_PRIVATE_KEY }}
+      #     script: |
+      #         cd /home/ubuntu/projects/clank
+      #         npm ci
+
+      #         git checkout master &&
+      #         git fetch --all &&
+      #         git reset --hard origin/master &&
+      #         git pull origin master &&
+      #         pm2 restart clank-bot
+
+      - name: ls -a via ssh
+        uses: fifsky/ssh-action@master
         with:
-          host: ${{ secrets.HOSTNAME }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: |
+          command: |
               cd /home/ubuntu/projects/clank
               npm ci
 
@@ -42,3 +55,6 @@ jobs:
               git reset --hard origin/master &&
               git pull origin master &&
               pm2 restart clank-bot
+          host: ${{ secrets.HOSTNAME }}
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
