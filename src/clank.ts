@@ -3,15 +3,13 @@ import * as Discord from 'discord.js';
 import authConfig from '../auth.json';
 
 // Classes
-import RedisClient from './redis/redisClient';
 import DictionaryClient from './api/DictionaryAPI';
 import TheOneAPI from './api/TheOneAPI'
 import YugiohAPI from './api/YugiohAPI'
 import PokemonAPI from './api/PokemonAPI'
 import HistoryAPI from './api/HistoryAPI'
 import OpenAPI from './api/OpenAPI'
-import { capitalize, convertArrayToString } from './utils/utils';
-import { pickRandomElementFromArray, showHelp } from './utils/utils';
+import { showHelp, capitalize, convertArrayToString } from './utils/utils';
 import { rollDice } from './dice/diceRoller';
 
 // Classes
@@ -21,7 +19,6 @@ import DefinitionDictAPI from './models/dictionary/DefinitionDictAPI';
 
 // Constructors
 const discordclient = new Discord.Client();
-const redisClient = new RedisClient();
 const lotrClient = new TheOneAPI();
 const dictClient = new DictionaryClient();
 const yugiohClient = new YugiohAPI();
@@ -30,7 +27,7 @@ const historyClient = new HistoryAPI();
 const openAPIClient = new OpenAPI();
 
 // Variables
-let prefix: string = '!';
+const prefix: string = '!';
 
 // Login
 discordclient.login(authConfig.DISCORD_BOT_TOKEN);
@@ -54,57 +51,6 @@ discordclient.on('message', async (message) => {
     console.log("\nMessage Recieved: " + message.content);
 
     switch (command) {
-
-        // Redis
-        case 'addgame': {
-            if (!args.length) {
-                return message.channel.send(
-                    `You didn't specify a game, ${message.author}!`
-                );
-            }
-            message.reply(
-                ' I added ' + argsContent + ' to the list of games!'
-            );
-
-            redisClient.addGame(argsContent);
-            break;
-        }
-        case 'listgames': {
-            message.channel.send(
-                'The following games I pick from are as follows: '
-            );
-            redisClient.listGames().then((redisPromise) => {
-                console.log(redisPromise);
-                message.channel.send(redisPromise);
-            });
-            break;
-        }
-        case 'removegame': {
-            message.channel.send(
-                'Attempting to remove ' +
-                argsContent +
-                ' from the list of games...'
-            );
-            redisClient.removeGame(argsContent).then((redisPromise) => {
-                // console.log("Result: " + redisPromise.toString());
-                if (redisPromise.toString() === '0') {
-                    message.channel.send('Game was not found.');
-                }
-                message.channel.send(
-                    'Removed ' + argsContent + ' from the list!'
-                );
-            });
-            break;
-        }
-        case 'choosegame': {
-            message.channel.send('Picking a random game to play...');
-            redisClient.listGames().then((listOfGames) => {
-                const randomGame: string = pickRandomElementFromArray(listOfGames);
-                message.channel.send('I choose **' + randomGame + '** !!!');
-            });
-            break;
-        }
-
         // Dictionary
         case 'wotd': {
             const wordOfTheDayDefinition: any = await dictClient.getWordOfTheDay();
@@ -187,7 +133,6 @@ discordclient.on('message', async (message) => {
 
             break;
         }
-
 
         case 'define': {
             const wordDefinition: DefinitionDictAPI = await dictClient.getWordDefinition(argsContent);
@@ -295,30 +240,9 @@ discordclient.on('message', async (message) => {
             break;
         }
 
-        // Tekken
-        case 'startTournament': {
-            message.reply(
-                "What kind of tournament do you want to play?"
-            ); break;
-        }
-
         // Utils
         case 'help': {
             message.channel.send(showHelp());
-            break;
-        }
-        case 'shutdown': {
-            message.reply('Farewell, I shall return!');
-            process.exit(0);
-            break;
-        }
-        case 'prefix': {
-            if (!argsContent) {
-                message.reply("specify a prefix!");
-                break;
-            }
-            prefix = argsContent;
-            message.reply("now I'll use the prefix " + argsContent + " instead of the default '>'.");
             break;
         }
         case 'yugioh': {
@@ -395,7 +319,7 @@ discordclient.on('message', async (message) => {
                     count = count + 1;
                 }
             }
-
+            break;
         }
         case 'ai': {
             if (!argsContent) {
@@ -409,11 +333,11 @@ discordclient.on('message', async (message) => {
             const completion: any = await openAPIClient.getCompletion(argsContent);
 
             sentMessage.edit(completion)
-        }
             break;
+        }
         default: {
             message.reply(
-                "I'm sorry but I have no idea what you are talking about! Try using >help"
+                `I'm sorry but I have no idea what you are talking about! Try using ${prefix}help`
             );
             break;
         }

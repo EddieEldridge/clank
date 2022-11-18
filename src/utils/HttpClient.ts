@@ -20,7 +20,6 @@ export default class HTTPClient {
                 this.url + endpoint,
                 { headers: { "Authorization": `Bearer ${this.token}` } })
 
-
             // Print the response
             printResponse(response);
 
@@ -48,6 +47,4 @@ export default class HTTPClient {
             });
         return;
     }
-
-
 }

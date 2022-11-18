@@ -1,1 +1,0 @@
-ts-node -T src/clank.ts

@@ -44,13 +44,6 @@ export function showHelp(): string {
     }
 }
 
-export function jsonify(response: string): JSON{
-    const jsonString = JSON.stringify(response);
-    const jsonObject = JSON.parse(jsonString);
-    return jsonObject;
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function printResponse(response: any) {
     console.log("=== Response ====");
     console.log(response.status);
